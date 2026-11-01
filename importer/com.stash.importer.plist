@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.stash.importer</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/node</string>
+    <string>/Users/YOUR_USERNAME/Claude/stash/importer/import.js</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/YOUR_USERNAME/Claude/stash/importer</string>
+
+  <!-- Runs once a day at 8:30am. Edit Hour/Minute below to change, then
+       `launchctl unload` + `launchctl load` to pick up the change. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>8</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/YOUR_USERNAME/Claude/stash/importer/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/YOUR_USERNAME/Claude/stash/importer/launchd.log</string>
+</dict>
+</plist>

@@ -1,0 +1,16 @@
+{
+  "name": "stash-importer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pulls links dropped by the iPhone Shortcuts into iCloud Drive's Stash Inbox folder into the local Stash SQLite database.",
+  "scripts": {
+    "import": "node import.js"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "better-sqlite3": "^11.9.1",
+    "jsdom": "^24.1.3",
+    "turndown": "^7.2.0"
+  }
+}

@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node (if you add any)
+node_modules/
+npm-debug.log
+
+# Logs
+*.log
+
+# Local config with real credentials
+config.local.js
+
+# Build artifacts
+*.zip
+
+# Personal export data (already imported into the app's local database)
+archive/

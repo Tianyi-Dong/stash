@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="description" content="Your personal reading stash">
+
+  <title>Stash</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Vendored locally - this app has no network dependency for its own UI -->
+  <script src="vendor/marked.min.js"></script>
+  <script src="vendor/Readability.js"></script>
+  <script src="vendor/turndown.js"></script>
+  <script src="vendor/mark.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Main App -->
+    <div id="main-screen" class="screen">
+      <!-- Sidebar Overlay (for mobile) -->
+      <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-small">S</div>
+          <span>Stash</span>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-item" data-view="articles">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Articles
+          </a>
+          <a href="#" class="nav-item" data-view="highlights">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            Highlights
+          </a>
+          <a href="#" class="nav-item" data-view="favorites">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            Favorites
+          </a>
+          <a href="#" class="nav-item active" data-view="all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            </svg>
+            All Saves
+          </a>
+          <a href="#" class="nav-item" data-view="archived">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="21 8 21 21 3 21 3 8"></polyline>
+              <rect x="1" y="3" width="22" height="5"></rect>
+              <line x1="10" y1="12" x2="14" y2="12"></line>
+            </svg>
+            Archived
+          </a>
+        </nav>
+
+        <div class="nav-section">
+          <h3>Folders</h3>
+          <div id="folders-list"></div>
+          <button class="add-folder-btn" id="add-folder-btn">+ New Folder</button>
+        </div>
+
+        <div class="nav-section">
+          <h3>Tags</h3>
+          <div id="tags-list" class="tags-cloud"></div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="theme-toggle" id="theme-toggle">
+            <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="theme-label">Dark Mode</span>
+          </button>
+          <a href="#" class="nav-item" data-view="stats">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Stats
+          </a>
+          <a href="#" class="nav-item" id="extension-token-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path>
+              <path d="M14 9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"></path>
+            </svg>
+            Connect Extension
+          </a>
+          <div class="credits">
+            Made by <a href="https://kevinroose.com" target="_blank">Kevin Roose</a><br>
+            Updated by Tianyi Dong<br>
+            Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a> and <a href="https://cursor.com" target="_blank">Cursor</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main">
+        <!-- Header -->
+        <header class="main-header">
+          <div class="search-container">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" placeholder="Search your stash...">
+          </div>
+          <button class="btn primary" id="save-article-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Save Article
+          </button>
+          <button class="btn icon" id="mobile-menu-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content">
+          <div class="content-header">
+            <h2 id="view-title">All Saves</h2>
+            <div class="view-controls">
+              <label class="unread-toggle">
+                <input type="checkbox" id="unread-only-toggle">
+                Unread only
+              </label>
+              <select id="sort-select">
+                <option value="created_at.desc">Newest first</option>
+                <option value="created_at.asc">Oldest first</option>
+                <option value="title.asc">Title A-Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="saves-container" class="saves-grid">
+            <!-- Saves will be loaded here -->
+          </div>
+
+          <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+          </div>
+
+          <div id="empty-state" class="empty-state hidden">
+            <div class="empty-icon">📚</div>
+            <h3>No saves yet</h3>
+            <p>Install the Chrome extension to start saving articles and highlights.</p>
+          </div>
+        </div>
+      </main>
+
+      <!-- Reading Pane (for viewing saved content) -->
+      <aside id="reading-pane" class="reading-pane hidden">
+        <div class="reading-header">
+          <button class="btn icon" id="close-reading-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <div class="reading-actions">
+            <button class="btn icon" id="maximize-btn" title="Maximize">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+            <button class="btn icon" id="archive-btn" title="Archive">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                <rect x="1" y="3" width="22" height="5"></rect>
+              </svg>
+            </button>
+            <button class="btn icon" id="favorite-btn" title="Favorite">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+            <button class="btn icon" id="delete-btn" title="Delete">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+            <a id="open-original-btn" href="#" target="_blank" class="btn icon" title="Open original">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="reading-progress-bar">
+          <div class="reading-progress-fill" id="reading-progress-fill"></div>
+        </div>
+        <div class="reading-content" id="reading-content">
+          <div id="reading-meta" class="reading-meta"></div>
+          <div id="reading-parent-link" class="reading-parent-link hidden"></div>
+          <h1 id="reading-title"></h1>
+          <div id="reading-body" class="reading-body"></div>
+          <div id="reading-highlights-section" class="reading-highlights-section hidden">
+            <h3 class="reading-highlights-heading">Highlights from this article</h3>
+            <div id="reading-highlights-list"></div>
+          </div>
+        </div>
+        <div id="reading-notes" class="reading-notes hidden">
+          <label for="reading-notes-input">Notes</label>
+          <textarea id="reading-notes-input" class="reading-notes-input" placeholder="Add a note..." rows="3"></textarea>
+          <button class="btn secondary btn-sm" id="save-notes-btn">Save note</button>
+        </div>
+        <div class="reading-folder">
+          <label for="reading-folder-select">Folder</label>
+          <select id="reading-folder-select" class="reading-folder-select" title="Move to folder">
+            <option value="">No folder</option>
+          </select>
+        </div>
+        <div class="reading-tags">
+          <div id="reading-tags-list"></div>
+          <button class="add-tag-btn" id="add-tag-btn">+ Add tag</button>
+        </div>
+      </aside>
+
+      <!-- Floating highlight tooltip (appears on text selection in reading pane) -->
+      <div id="highlight-tooltip" class="highlight-tooltip hidden">
+        <button id="highlight-save-btn" class="highlight-tooltip-btn" title="Save highlight">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          Highlight
+        </button>
+        <div id="highlight-tooltip-form" class="highlight-tooltip-form hidden">
+          <textarea id="highlight-note-input" placeholder="Add a note (optional)" rows="2"></textarea>
+          <input type="text" id="highlight-tag-input" placeholder="Add a tag (optional)">
+          <div class="highlight-tooltip-form-actions">
+            <button id="highlight-form-cancel" class="btn secondary btn-sm">Cancel</button>
+            <button id="highlight-form-save" class="btn primary btn-sm">Save Highlight</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic dialog (replaces window.prompt/confirm/alert - not reliably
+         supported in the Tauri webview) -->
+    <div id="dialog-modal" class="modal hidden">
+      <div class="modal-overlay" id="dialog-overlay"></div>
+      <div class="modal-content dialog-content">
+        <div class="modal-header">
+          <h2 id="dialog-title"></h2>
+        </div>
+        <div class="modal-body">
+          <p id="dialog-message" class="hidden"></p>
+          <input type="text" id="dialog-input" class="modal-input hidden">
+        </div>
+        <div class="modal-footer">
+          <button class="btn secondary" id="dialog-cancel">Cancel</button>
+          <button class="btn primary" id="dialog-confirm">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Screen -->
+    <div id="stats-screen" class="screen hidden">
+      <!-- Will be populated by JS -->
+    </div>
+
+  </div>
+
+  <script src="articleExtract.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
