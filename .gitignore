@@ -15,8 +15,11 @@ npm-debug.log
 # Logs
 *.log
 
-# Local config with real credentials
+# Local config with real credentials/paths - see the matching .example
+# file for the template that's actually tracked
 config.local.js
+extension/config.js
+importer/com.stash.importer.plist
 
 # Build artifacts
 *.zip

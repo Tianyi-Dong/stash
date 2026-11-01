@@ -29,10 +29,13 @@ what happened.
 
 ## Run on a schedule (launchd)
 
-`com.stash.importer.plist` runs the importer once a day at 8:30am. To
-install it:
+`com.stash.importer.plist.example` is the tracked template; make your own
+real copy (gitignored, since it has to hardcode your username) and install
+it:
 
 ```bash
+cp com.stash.importer.plist.example com.stash.importer.plist
+# edit com.stash.importer.plist and fill in your actual paths (see "Note on paths" below)
 cp com.stash.importer.plist ~/Library/LaunchAgents/
 launchctl load ~/Library/LaunchAgents/com.stash.importer.plist
 ```
@@ -63,7 +66,7 @@ launchctl unload ~/Library/LaunchAgents/com.stash.importer.plist
 
 ## Note on paths
 
-`com.stash.importer.plist` ships with placeholder paths
+`com.stash.importer.plist.example` ships with placeholder paths
 (`/Users/YOUR_USERNAME/Claude/stash`) — fill in your actual username (and
 move/rename the repo path if different) before loading it. It also
 hardcodes the path to `node` (`/usr/local/bin/node`, confirmed via `which

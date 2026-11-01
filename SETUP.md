@@ -32,9 +32,12 @@ The built app appears under `src-tauri/target/release/bundle/macos/`.
 
 1. With the Stash app running, click **Connect Extension** in the sidebar
    footer — it shows your local server token.
-2. Open `extension/config.js` and paste the token into `TOKEN`
+2. `cp extension/config.example.js extension/config.js`, then open
+   `extension/config.js` and paste the token into `TOKEN`
    (`SERVER_URL` is already set to `http://127.0.0.1:47615`, the port the
-   app's local server listens on).
+   app's local server listens on). `extension/config.js` is gitignored
+   since it holds your real token — `config.example.js` is the template
+   that's actually tracked.
 3. Open Chrome → `chrome://extensions/` → enable **Developer mode** → **Load
    unpacked** → select the `extension` folder.
 
