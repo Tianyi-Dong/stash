@@ -34,6 +34,25 @@ const USER_AGENT =
 
 const turndown = new TurndownService({ headingStyle: 'atx' });
 
+// iCloud Drive keeps rarely-touched files "evicted" (cloud-only) until something
+// reads them. The first read kicks off a download but fails immediately with this
+// (unmapped-on-macOS) EAGAIN; without a retry, a file that nothing else ever opens
+// stays stuck in this state forever, failing the same way on every scheduled run.
+function isCloudNotDownloadedYet(err) {
+  return err.code === 'UNKNOWN' && err.errno === -11 && err.syscall === 'read';
+}
+
+async function readFileWaitingForICloud(path, attempts = 15, delayMs = 2000) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return readFileSync(path, 'utf8');
+    } catch (err) {
+      if (!isCloudNotDownloadedYet(err) || i === attempts - 1) throw err;
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+}
+
 function log(message) {
   const line = `[${new Date().toISOString()}] ${message}`;
   console.log(line);
@@ -143,7 +162,7 @@ async function main() {
   for (const file of files) {
     const path = join(INBOX_DIR, file.name);
     try {
-      const entry = parseEntry(readFileSync(path, 'utf8'));
+      const entry = parseEntry(await readFileWaitingForICloud(path));
       const parsed = await fetchAndParse(entry.url);
       const id = insertSave(db, {
         url: entry.url,
