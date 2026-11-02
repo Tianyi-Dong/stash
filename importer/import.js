@@ -93,6 +93,15 @@ function extractMeta(document) {
   };
 }
 
+// WeChat (mp.weixin.qq.com) ships the full article body server-side inside
+// #js_content, but hides it with an inline style and reveals it with JS after
+// load. Readability treats visibility:hidden nodes as invisible and skips
+// them, so without this it either finds no content or grabs some unrelated
+// visible scrap (e.g. the share-card header) instead of the real body.
+function unhideWechatContent(document) {
+  document.getElementById('js_content')?.removeAttribute('style');
+}
+
 async function fetchAndParse(url) {
   const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
   if (!res.ok) {
@@ -102,6 +111,10 @@ async function fetchAndParse(url) {
 
   const dom = new JSDOM(html, { url });
   const meta = extractMeta(dom.window.document);
+
+  if (new URL(url).hostname === 'mp.weixin.qq.com') {
+    unhideWechatContent(dom.window.document);
+  }
 
   const reader = new Readability(dom.window.document);
   const article = reader.parse();
